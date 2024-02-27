@@ -1,10 +1,13 @@
-﻿@inject NavigationManager NavigationManager
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+@implements IDisposable
+
+@inject NavigationManager NavigationManager
 
 <Sidebar @ref="_sidebar" 
          DataProvider="SidebarDataProviderAsync"
+         Title="Catalogify"
          IconName="IconName.Boxes"
-         Title="Catalogify" 
-         BadgeText="v0.1.0"/>
+         BadgeText="v0.1.1"/>
     
 <style>
     :root {
@@ -12,3 +15,5 @@
         --bb-sidebar-nav-item-text-active-color-rgb: 5.0,117.0,230.0;
     }
 </style>
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight"/>

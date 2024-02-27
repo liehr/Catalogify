@@ -1,0 +1,82 @@
+﻿<PageTitle>
+    Register
+</PageTitle>
+@rendermode @(new InteractiveServerRenderMode(false))
+
+<div class="container my-5">
+    <div class="card p-4 shadow">
+        <h2 class="mb-4 text-center">Catalogify </h2>
+        <h6 class="mb-4 text-center">Verwenden Sie ihre FH-SWF Zugangsdaten.</h6>
+        <hr/>
+        <form method="post" action="authentication/register" FormName="register">
+            <div class="mb-3">
+                <input name="email" class="form-control" autocomplete="email" aria-required="true" placeholder="mamus@example.com"/>
+                <label for="email" class="form-label">Email Adress</label>
+            </div>
+            <div class="mb-3">
+                <input name="password" type="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password"/>
+                <label for="password" class="form-label">Password</label>
+            </div>
+            
+            <div class="mb-3">
+                <input name="password" type="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password"/>
+                <label for="password" class="form-label">Confirm Password</label>
+            </div>
+            <div>
+                <button type="submit" class="w-100 btn btn-primary mb-2">Log in</button>
+            </div>
+            <div class="d-flex align-items-center">
+                <span class="me-2">By registering an account you accept our privacy statement </span>
+                <Button @onclick="OnShowOffcancasClick" Color="ButtonColor.Warning" Size="Size.Small" TooltipTitle="Show privacy policy" TooltipPlacement="TooltipPlacement.Top" TooltipColor="TooltipColor.Warning"><Icon Name="IconName.Question"></Icon></Button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<Offcanvas @ref="_offcanvas" Title="Privacy Policy">
+    <BodyTemplate>
+        <div class="container">
+            <p class="mb-4">
+                At Catalogify, we take your privacy seriously. This Privacy Policy outlines how we collect, use, and protect your personal information when you use our website and services.
+            </p>
+            <p class="mb-4">
+                <strong>Information We Collect:</strong>
+                <ul>
+                    <li>We collect your name, email address, and any other information you provide to us when you use our services.</li>
+                    <li>Your personal information may be used to communicate with you, provide customer support, and improve our services.</li>
+                    <li>We may also collect usage data, such as your IP address, browser type, and device information, to analyze trends and improve our website.</li>
+                </ul>
+            </p>
+            <p class="mb-4">
+                <strong>How We Use Your Information:</strong>
+                <ul>
+                    <li>We use your personal information to provide and improve our services, personalize your experience, and communicate with you.</li>
+                    <li>We may also use your information to send you promotional emails or newsletters, but you can opt out at any time.</li>
+                    <li>We do not sell, rent, or trade your personal information to third parties without your consent.</li>
+                </ul>
+            </p>
+            <p class="mb-4">
+                <strong>Security Measures:</strong>
+                <ul>
+                    <li>We implement security measures to protect your personal information from unauthorized access, disclosure, or alteration.</li>
+                    <li>We use encryption, firewalls, and other industry-standard security practices to safeguard your data.</li>
+                </ul>
+            </p>
+            <p class="mb-4">
+                <strong>Changes to This Privacy Policy:</strong>
+                <br>
+                We reserve the right to update or change our Privacy Policy at any time. Any changes will be posted on this page, and you will be notified via email or a prominent notice on our website.
+            </p>
+            <p>
+                If you have any questions or concerns about our Privacy Policy, please contact us at <a href="mailto:privacy@catalogify.xyz">privacy@catalogify.xyz</a>.
+            </p>
+        </div>
+    </BodyTemplate>
+</Offcanvas>
+
+
+@code {
+    private Offcanvas _offcanvas = default!;
+    private async Task OnShowOffcancasClick() => await _offcanvas.ShowAsync();
+    private async Task OnHideOffcancasClick() => await _offcanvas.HideAsync();
+}

@@ -1,31 +1,41 @@
 using BlazorBootstrap;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Routing;
 
 namespace Catalogify.Components.Layout;
 
 public partial class NavMenu
 {
+    [Inject]
+    private AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    
     private Sidebar? _sidebar;
     private IEnumerable<NavItem>? _navItems;
     private string? _currentUrl;
 
     private async Task<SidebarDataProviderResult> SidebarDataProviderAsync(SidebarDataProviderRequest request)
     {
-        _navItems ??= await GetNavItemsAsync();
+        if (_navItems is null)
+            _navItems = await GetNavItemsAsync();
 
         return request.ApplyTo(_navItems);
     }
 
-    private static Task<IEnumerable<NavItem>> GetNavItemsAsync()
+    private async Task<IEnumerable<NavItem>> GetNavItemsAsync()
     {
+        var authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
+        //Global Nav Items
         var items = new List<NavItem>
         {
             new() {Href = "/", IconName = IconName.House, Sequence = 0,Text = "Home", Match = NavLinkMatch.All},
-            new() {Href = "/Counter", IconName = IconName.Plus, Sequence = 1, Text = "Counter", Match = NavLinkMatch.Prefix},
-            new() {Href = "/FetchData", IconName = IconName.Table, Sequence = 2, Text = "Fetch data", Match = NavLinkMatch.Prefix},
+            new() {Href = "Projects/List", IconName = IconName.Journals, Sequence = 1, Text = "Projekte"},
+            new() {Href = "Modules/List", IconName = IconName.Bookmarks, Sequence = 3, Text = "Module"},
+            new() {Href = "Account/Profile", IconName = IconName.Person, Sequence = 900, Text = $"{authState.User.Identity?.Name}"},
+            new() {Href = "authentication/logout", IconName = IconName.BoxArrowInLeft, Sequence = 999, Text = "Logout"},
         };
 
-        return Task.FromResult<IEnumerable<NavItem>>(items);
+        return items;
     }
 
     protected override void OnInitialized()
