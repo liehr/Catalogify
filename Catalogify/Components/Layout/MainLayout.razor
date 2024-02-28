@@ -1,20 +1,21 @@
 ﻿@inherits LayoutComponentBase
+@using Catalogify.Components.Pages.Auth
+<AuthorizeView>
+    <Authorized>
+        <div class="page">
+            <NavMenu/>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <main>
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
         </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <Authentication/>
+    </NotAuthorized>
+</AuthorizeView>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

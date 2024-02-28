@@ -1,0 +1,85 @@
+﻿@rendermode @(new InteractiveServerRenderMode(false))
+
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+<div class="container my-5">
+    <div class="card p-4 shadow">
+        <h1 class="mb-4 text-center">Catalogify 📦💻 </h1>
+        <h6 class="mb-4 text-center">the ultimate solution for managing your inventory like a pro!</h6>
+        <hr/>
+        
+        @{
+            void ShowAlert(bool condition, string message, AlertColor color)
+            {
+                if (condition)
+                {
+                    <Alert Class="mt-2 mb-2" Color="@color" Dismissable="true"><strong>@message</strong></Alert>
+                }
+            }
+        }
+
+        @{
+            ShowAlert(LoginFailed, "Login failed! Check your E-Mail and Password!", AlertColor.Danger);
+            ShowAlert(RegisterFailed, "Registration failed! Check your E-Mail and Password! Maybe you already have an account!", AlertColor.Danger);
+            ShowAlert(RegisterSuccess, "Registration successful! You can now proceed to login!", AlertColor.Success);
+        }
+        
+        <Tabs NavStyle="NavStyle.Pills" EnableFadeEffect="true">
+            <Tab Title="Login">
+                <Content>
+                    <form method="post" action="authentication/login" FormName="register">
+                        <h1 class="h3 mt-2 mb-3 fw-normal">Please sign in</h1>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input name="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" required>
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input name="password" type="password" id="password" class="form-control" aria-describedby="password" required>
+                            <div id="passwordHelpBlock" class="form-text">
+                                Your password must be 8-20 characters long, contain letters, numbers, and must contain a special character.
+                            </div>
+                        </div>
+
+
+                        <div class="form-check text-start my-3">
+                            <input name="rememberMe" class="form-check-input" type="checkbox" value="rememberMe" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+                        <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+                    </form>
+                </Content>
+            </Tab>
+            <Tab Title="Register">
+                <Content>
+                    <form method="post" action="authentication/register" FormName="register">
+                        <h1 class="h3 mt-2 mb-3 fw-normal">Please sign up</h1>
+
+                        <div class="mb-3">
+                            <label for="registeremail" class="form-label">Email address</label>
+                            <input name="registeremail" type="email" class="form-control" id="registeremail" aria-describedby="registeremailHelp" required>
+                            <div id="registeremailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="registerpassword" class="form-label">Password</label>
+                            <input name="registerpassword" type="password" id="registerpassword" class="form-control" aria-describedby="registerpasswordHelpBlock" required>
+                            <div id="registerpasswordHelpBlock" class="form-text">
+                                Your password must be 8-20 characters long, contain letters, numbers, and must contain a special character.
+                            </div>
+                        </div>
+
+
+                        <button class="btn btn-primary w-100 py-2" type="submit">Sign me up!</button>
+                    </form>
+                </Content>
+            </Tab>
+        </Tabs>
+        <p class="mt-5 mb-3 text-body-secondary">Made with ❤️ in Germany! Catalogify &copy; 2017–2024</p>
+    </div>
+</div>
