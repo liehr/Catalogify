@@ -9,6 +9,11 @@ public class RegisterController(IAuthenticationService authenticationService) : 
     [HttpPost("/authentication/register")]
     public async Task<IActionResult> RegisterAsync([FromForm] string registeremail, [FromForm] string registerpassword)
     {
+        if (string.IsNullOrWhiteSpace(registeremail) || string.IsNullOrWhiteSpace(registerpassword))
+        {
+            return Redirect("/" + "?registerFailed");
+        }
+        
         var user = await authenticationService.RegisterAsync(new CreateUser
         {
             Email = registeremail,
