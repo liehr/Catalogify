@@ -7,12 +7,12 @@ namespace Catalogify.Components.Pages.Auth;
 public class RegisterController(IAuthenticationService authenticationService) : Controller
 {
     [HttpPost("/authentication/register")]
-    public async Task<IActionResult> RegisterAsync([FromForm] string email, [FromForm] string password)
+    public async Task<IActionResult> RegisterAsync([FromForm] string registeremail, [FromForm] string registerpassword)
     {
         var user = await authenticationService.RegisterAsync(new CreateUser
         {
-            Email = email,
-            Password = password
+            Email = registeremail,
+            Password = registerpassword
         });
 
         return Redirect("/");
