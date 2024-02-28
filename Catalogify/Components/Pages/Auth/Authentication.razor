@@ -1,5 +1,19 @@
 ﻿@rendermode @(new InteractiveServerRenderMode(false))
 
+<style>
+.nav-pills {
+    --bs-nav-pills-link-active-bg: #212529;
+}
+    
+.nav-link {
+    color: #212529;
+}
+    
+.nav {
+    --bs-nav-link-hover-color: #212529;
+}
+</style>
+
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 <div class="container my-5">
     <div class="card p-4 shadow">
@@ -51,7 +65,7 @@
                                 Remember me
                             </label>
                         </div>
-                        <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+                        <button class="btn btn-dark w-100 py-2" type="submit">Sign in</button>
                     </form>
                 </Content>
             </Tab>
@@ -75,7 +89,7 @@
                         </div>
 
 
-                        <button class="btn btn-primary w-100 py-2" type="submit">Sign me up!</button>
+                        <button class="btn btn-dark w-100 py-2" type="submit">Sign me up!</button>
                     </form>
                 </Content>
             </Tab>

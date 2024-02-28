@@ -22,7 +22,10 @@
 
     <ItemGroup>
       <Folder Include="Components\Custom\" />
-      <Folder Include="Components\Inventory\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Inventory\List\Page.razor" />
     </ItemGroup>
 
 </Project>
