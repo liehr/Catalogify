@@ -14,33 +14,37 @@ namespace Catalogify.Components.Pages.Auth;
 public class LoginController(IAuthenticationService authenticationService, ToastService toastService) : Controller
 {
     [HttpPost("/authentication/login")]
-    public async Task<IActionResult> LoginAsync([FromForm] string email, [FromForm] string password)
+    public async Task<IActionResult> LoginAsync([FromForm] string email, [FromForm] string password, [FromForm] bool rememberMe) 
     {
-        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        var user = await authenticationService.LoginAsync(new LoginUser
+        {
+            Email = email,
+            Password = password
+        });
+
+        if (user is null)
         {
             return Redirect("/" + "?loginFailed");
         }
-        
-        var data = await authenticationService.LoginAsync(new LoginUser { Email = email, Password = password });
 
-        if (data is null)
+        var claims = new List<Claim>
         {
-            return Redirect("/" + "?loginFailed"); 
-        }
-        
-        var claims = new List<Claim>();
+            new(ClaimTypes.Name, user.Email),
+            new(ClaimTypes.Role, user.Role)
+        };
 
-        claims.Add(new Claim(ClaimTypes.Name, $"{data.Firstname} {data.Lastname}"));
-        claims.Add(new Claim("Id", data.Id.ToString()));
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-        if (!string.IsNullOrWhiteSpace(data.Role))
-            claims.Add(new Claim(ClaimTypes.Role, data.Role));
+        var authProperties = new AuthenticationProperties
+        {
+            IsPersistent = rememberMe,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMonths(6)
+        };
 
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(principal);
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity),
+            authProperties);
 
         return Redirect("/");
     }

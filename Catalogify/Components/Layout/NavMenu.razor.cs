@@ -29,8 +29,7 @@ public partial class NavMenu
         var items = new List<NavItem>
         {
             new() {Href = "/", IconName = IconName.House, Sequence = 0,Text = "Home", Match = NavLinkMatch.All},
-            new() {Href = "Projects/List", IconName = IconName.Journals, Sequence = 1, Text = "Projekte"},
-            new() {Href = "Modules/List", IconName = IconName.Bookmarks, Sequence = 3, Text = "Module"},
+            new() {Href = "Inventory", IconName = IconName.Journals, Sequence = 1, Text = "Projekte"},
             new() {Href = "Account/Profile", IconName = IconName.Person, Sequence = 900, Text = $"{authState.User.Identity?.Name}"},
             new() {Href = "authentication/logout", IconName = IconName.BoxArrowInLeft, Sequence = 999, Text = "Logout"},
         };

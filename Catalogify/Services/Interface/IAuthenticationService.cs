@@ -11,5 +11,7 @@ public interface IAuthenticationService
     
     public Task<User?> GetUserAsync(Guid id);
     
+    public Task<User?> GetUserByEmailAsync(string email);
+    
     public Task SaveUserAsync(User user);
 }

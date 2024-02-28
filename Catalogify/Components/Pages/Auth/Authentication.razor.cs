@@ -8,6 +8,8 @@ public partial class Authentication
     private bool LoginFailed { get; set; }
     
     private bool RegisterFailed { get; set; }
+    
+    private bool RegisterSuccess { get; set; }
 
     [Inject]
     private NavigationManager? NavigationManager { get; set; }
@@ -17,6 +19,7 @@ public partial class Authentication
         var uri = NavigationManager!.ToAbsoluteUri(NavigationManager.Uri);
         LoginFailed = QueryHelpers.ParseQuery(uri.Query).TryGetValue("loginFailed", out var _);
         RegisterFailed = QueryHelpers.ParseQuery(uri.Query).TryGetValue("registerFailed", out var _);
+        RegisterSuccess = QueryHelpers.ParseQuery(uri.Query).TryGetValue("registerSuccess", out var _);
         
         base.OnInitialized();
     }

@@ -60,6 +60,15 @@ public class AuthenticationService(IDbContextFactory<ApplicationDbContext> _fact
         return user;
     }
     
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        await using var db = await _factory.CreateDbContextAsync();
+
+        var user = await db.Users.SingleOrDefaultAsync(e => e.Email == email);
+
+        return user;
+    }
+    
 
     public Task SaveUserAsync(User user)
     {
