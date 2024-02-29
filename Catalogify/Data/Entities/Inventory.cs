@@ -22,4 +22,6 @@ public class Inventory
     public DateTime CreatedAt { get; set; }
     
     public DateTime LastModifiedAt { get; set; }
+    
+    public List<Category>? Categories { get; set; }
 }

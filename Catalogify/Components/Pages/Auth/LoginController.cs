@@ -16,6 +16,11 @@ public class LoginController(IAuthenticationService authenticationService, Toast
     [HttpPost("/authentication/login")]
     public async Task<IActionResult> LoginAsync([FromForm] string email, [FromForm] string password, [FromForm] bool rememberMe) 
     {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            return Redirect("/" + "?loginFailed");
+        }
+        
         var user = await authenticationService.LoginAsync(new LoginUser
         {
             Email = email,

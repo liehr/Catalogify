@@ -55,6 +55,24 @@ public partial class Page
         { "bg-dark", "btn-outline-light" },
         { "bg-dark-subtle", "btn-outline-dark" }
     };
+
+    private readonly Dictionary<string, string> _borderColors = new()
+    {
+        { "bg-primary", "border-primary" },
+        { "bg-primary-subtle", "border-primary" },
+        { "bg-secondary", "border-secondary" },
+        { "bg-secondary-subtle", "border-secondary" },
+        { "bg-success", "border-success" },
+        { "bg-success-subtle", "border-success" },
+        { "bg-danger", "border-danger" },
+        { "bg-danger-subtle", "border-danger" },
+        { "bg-warning-subtle", "border-warning" },
+        { "bg-info-subtle", "border-info" },
+        { "bg-light", "border-secondary" },
+        { "bg-light-subtle", "border-secondary" },
+        { "bg-dark", "border-dark" },
+        { "bg-dark-subtle", "border-dark" }
+    };
     protected override async Task OnInitializedAsync()
     {
         await GetInventories();
@@ -114,10 +132,12 @@ public partial class Page
         
         var (bgColor, textColor) = PickRandomColor();
         var outlineColor = GetOutlineColor(bgColor);
+        var borderColor = GetBorderColor(bgColor);
         
         inventory.Metadata.Add("bgColor", bgColor);
         inventory.Metadata.Add("textColor", textColor);
         inventory.Metadata.Add("outlineColor", outlineColor);
+        inventory.Metadata.Add("borderColor", borderColor);
         
         await using var dbContext = await DbFactory.CreateDbContextAsync();
         dbContext.Inventories.Add(inventory);
@@ -135,5 +155,10 @@ public partial class Page
     private string GetOutlineColor(string color)
     {
         return _outlineColors[color];
+    }
+    
+    private string GetBorderColor(string color)
+    {
+        return _borderColors[color];
     }
 }
