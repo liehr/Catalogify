@@ -1,10 +1,68 @@
 ﻿@page "/Inventory/List"
+@rendermode @(new InteractiveServerRenderMode(true))
+
+@code {
+    // Define an array of Bootstrap color classes
+    readonly List<Tuple<string, string>> _colors =
+    [
+        new Tuple<string, string>("bg-primary", "text-white"),
+        new Tuple<string, string>("bg-primary-subtle", "text-primary-emphasis"),
+        new Tuple<string, string>("bg-secondary", "text-white"),
+        new Tuple<string, string>("bg-secondary-subtle", "text-secondary-emphasis"),
+        new Tuple<string, string>("bg-success", "text-white"),
+        new Tuple<string, string>("bg-success-subtle", "text-success-emphasis"),
+        new Tuple<string, string>("bg-danger", "text-white"),
+        new Tuple<string, string>("bg-danger-subtle", "text-danger-emphasis"),
+        new Tuple<string, string>("bg-warning", "text-dark"),
+        new Tuple<string, string>("bg-warning-subtle", "text-warning-emphasis"),
+        new Tuple<string, string>("bg-info", "text-white"),
+        new Tuple<string, string>("bg-info-subtle", "text-info-emphasis"),
+        new Tuple<string, string>("bg-light", "text-dark"),
+        new Tuple<string, string>("bg-light-subtle", "text-dark-emphasis"),
+        new Tuple<string, string>("bg-dark", "text-white"),
+        new Tuple<string, string>("bg-dark-subtle", "text-dark-emphasis")
+    ];
+    
+    readonly Dictionary<string, string> _outlineColors = new()
+    {
+        { "bg-primary", "btn-outline-light" },
+        { "bg-primary-subtle", "btn-outline-light" },
+        { "bg-secondary", "btn-outline-light" },
+        { "bg-secondary-subtle", "btn-outline-light" },
+        { "bg-success", "btn-outline-light" },
+        { "bg-success-subtle", "btn-outline-light" },
+        { "bg-danger", "btn-outline-light" },
+        { "bg-danger-subtle", "btn-outline-light" },
+        { "bg-warning", "btn-outline-dark" },
+        { "bg-warning-subtle", "btn-outline-dark" },
+        { "bg-info", "btn-outline-light" },
+        { "bg-info-subtle", "btn-outline-light" },
+        { "bg-light", "btn-outline-dark" },
+        { "bg-light-subtle", "btn-outline-dark" },
+        { "bg-dark", "btn-outline-light" },
+        { "bg-dark-subtle", "btn-outline-light" }
+    };
+    // Method to get a random color class from the array
+    Tuple<string, string> GetRandomColor()
+    {
+        var random = new Random();
+        return _colors[random.Next(0, _colors.Count)];
+    }
+
+    string GetOutlineColor(string color)
+    {
+        return _outlineColors[color];
+    }
+}
 
 @if (_inventories is null || _userName is null)
 {
-    <div class="d-flex justify-content-center">
-        <Spinner Type="SpinnerType.Border" />
-    </div>
+    <PlaceholderContainer Animation="PlaceholderAnimation.Glow">
+        <Placeholder Width="PlaceholderWidth.Col12" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Large" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Small" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.ExtraSmall" />
+    </PlaceholderContainer>
 }
 else
 {
@@ -14,36 +72,39 @@ else
             <p class="col-md-8 fs-4">Here you can view and manage your inventories. See below for your existing inventories or create a new one!</p>
         </div>
     </div>
-    
+
     <div class="row align-items-md-stretch">
         @if (_inventories.Count > 0)
         {
             @foreach (var inventory in _inventories)
             {
-                <div class="col-md-6">
-                    <div class="h-100 p-5 bg-body-tertiary border rounded-3">
+                var color = GetRandomColor();
+                var outlineColor = GetOutlineColor(color.Item1);
+                
+                <div class="col-md-6 mb-3">
+                    <div class="h-100 p-5 border @color.Item1 @color.Item2 rounded-3">
                         <h2>@inventory.Name</h2>
                         <p>@inventory.Description</p>
-                        <button class="btn btn-outline-secondary" type="button">Open Inventory</button>
+                        <button class="btn @outlineColor" type="button">Open Inventory</button>
                     </div>
                 </div>
             }
-            
-            <div class="col-md-6">
+
+            <div class="col-md-6 mb-3">
                 <div class="h-100 p-5 text-bg-dark rounded-3">
                     <h2>Create a New Inventory</h2>
                     <p>Click below to create a new inventory.</p>
-                    <button class="btn btn-outline-light" type="button">Create</button>
+                    <button class="btn btn-outline-light" type="submit" @onclick="OnCreateEmptyInventory">Create Inventory</button>
                 </div>
             </div>
         }
         else
         {
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 <div class="h-100 p-5 text-bg-dark rounded-3">
                     <h2>No Inventories Found</h2>
                     <p>There are currently no inventories available.</p>
-                    <button class="btn btn-outline-light" type="button">Create Inventory</button>
+                    <button class="btn btn-outline-light" type="submit" @onclick="OnCreateEmptyInventory">Create Inventory</button>
                 </div>
             </div>
         }

@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Catalogify.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using DBFactory = Microsoft.EntityFrameworkCore.IDbContextFactory<Catalogify.Data.ApplicationDbContext>;
 
 namespace Catalogify.Components.Pages.Inventory.List;
 public static class Data
 {
-    internal static async Task<List<Pages.Inventory.List.Inventory>> GetInventoriesAsync(Guid userid, DBFactory dbContextFactory)
+    internal static async Task<List<Inventory>> GetInventoriesAsync(Guid userid, DBFactory dbContextFactory)
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
         
@@ -16,9 +17,9 @@ public static class Data
         return inventories.Select(FromEntity).ToList();
     }
     
-    internal static Pages.Inventory.List.Inventory FromEntity(Catalogify.Data.Entities.Inventory entity)
+    internal static Inventory FromEntity(Catalogify.Data.Entities.Inventory entity)
     {
-        return new Pages.Inventory.List.Inventory
+        return new Inventory
         {
             Id = entity.Id,
             Name = entity.Name,
