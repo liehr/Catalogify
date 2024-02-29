@@ -14,10 +14,12 @@ public static class Data
             .Include(e => e.Items)
             .ToListAsync();
         
+        inventories = inventories.OrderByDescending(e => e.CreatedAt).ToList();
+        
         return inventories.Select(FromEntity).ToList();
     }
-    
-    internal static Inventory FromEntity(Catalogify.Data.Entities.Inventory entity)
+
+    private static Inventory FromEntity(Catalogify.Data.Entities.Inventory entity)
     {
         return new Inventory
         {
@@ -28,7 +30,8 @@ public static class Data
             OwnerId = entity.OwnerId,
             User = entity.User,
             SubInventories = entity.SubInventories,
-            Items = entity.Items
+            Items = entity.Items,
+            Metadata = entity.Metadata
         };
     }
 }
