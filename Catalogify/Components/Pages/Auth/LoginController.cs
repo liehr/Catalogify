@@ -30,7 +30,8 @@ public class LoginController(IAuthenticationService authenticationService, Toast
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Email),
-            new(ClaimTypes.Role, user.Role)
+            new(ClaimTypes.Role, user.Role),
+            new("Id", user.Id.ToString())
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

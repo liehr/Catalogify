@@ -1,0 +1,59 @@
+﻿@page "/Inventory/List"
+@rendermode @(new InteractiveServerRenderMode(true))
+
+@if (_inventories is null || _userName is null)
+{
+    <PlaceholderContainer Animation="PlaceholderAnimation.Glow">
+        <Placeholder Width="PlaceholderWidth.Col12" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Large" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Small" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.ExtraSmall" />
+    </PlaceholderContainer>
+}
+else
+{
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Welcome to Your Inventory List @_userName</h1>
+            <p class="col-md-8 fs-4">Here you can view and manage your inventories. See below for your existing inventories or create a new one!</p>
+        </div>
+    </div>
+
+    <div class="row align-items-md-stretch">
+        @if (_inventories.Count > 0)
+        {
+            @foreach (var inventory in _inventories)
+            {
+                var bgColor = inventory.Metadata.FirstOrDefault(x => x.Key == "bgColor").Value;
+                var textColor = inventory.Metadata.FirstOrDefault(x => x.Key == "textColor").Value;
+                var outlineColor = inventory.Metadata.FirstOrDefault(x => x.Key == "outlineColor").Value;
+                
+                <div class="col-md-6 mb-3">
+                    <div class="h-100 p-5 border @bgColor @textColor rounded-3">
+                        <h2>@inventory.Name</h2>
+                        <p>@inventory.Description</p>
+                        <button class="btn @outlineColor" type="button">Open Inventory</button>
+                    </div>
+                </div>
+            }
+
+            <div class="col-md-6 mb-3">
+                <div class="h-100 p-5 text-bg-dark rounded-3">
+                    <h2>Create a New Inventory</h2>
+                    <p>Click below to create a new inventory.</p>
+                    <button class="btn btn-outline-light" type="submit" @onclick="OnCreateEmptyInventory">Create Inventory</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-6 mb-3">
+                <div class="h-100 p-5 text-bg-dark rounded-3">
+                    <h2>No Inventories Found</h2>
+                    <p>There are currently no inventories available.</p>
+                    <button class="btn btn-outline-light" type="submit" @onclick="OnCreateEmptyInventory">Create Inventory</button>
+                </div>
+            </div>
+        }
+    </div>
+}
