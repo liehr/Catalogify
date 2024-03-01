@@ -2,8 +2,54 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
-<h3>Page</h3>
 
-@code {
+@if (Inventory is null)
+{
+    <PlaceholderContainer Animation="PlaceholderAnimation.Glow">
+        <Placeholder Width="PlaceholderWidth.Col12" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Large" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Small" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.ExtraSmall" />
+    </PlaceholderContainer>
+}
+else
+{
+    var bgColor = Inventory.Metadata.FirstOrDefault(x => x.Key == "bgColor").Value;
+    var textColor = Inventory.Metadata.FirstOrDefault(x => x.Key == "textColor").Value;
+    var borderColor = Inventory.Metadata.FirstOrDefault(x => x.Key == "borderColor").Value;
     
+    <div class="p-5 mb-4 @bgColor @textColor border @borderColor rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">@Inventory.Name</h1>
+            <p class="col-md-8 fs-4">@Inventory.Description</p>
+            
+            <input type="text" class="form-control" id="search" @bind="SearchTerm" @bind:event="oninput" placeholder="Search for items...">
+        </div>
+    </div>
+
+    <div class="row align-items-md-stretch">
+        @if (Inventory.Items is not null && Inventory.Items.Count > 0)
+        {
+            @foreach (var item in FilteredItems!)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="h-100 p-5 border border-dark bg-dark-subtle text-dark-emphasis rounded-3">
+                        <h2>@item.Name</h2>
+                        <p>@item.Description</p>
+                        <NavLink class="nav-link" href="@($"Inventory/Item/View/{item.Id}")">
+                            <button class="btn btn-outline-dark" type="button">Open Item</button>
+                        </NavLink>
+                    </div>
+                </div>
+            }
+        }
+        
+        <div class="col-12 col-md-3 mb-3">
+            <div class="h-100 p-3 text-bg-dark rounded-3">
+                <h2>Create a New Item</h2>
+                <p>Click below to create a new item.</p>
+                <button class="btn btn-outline-light" type="button" @onclick="OnCreateItem" >Create Item</button>
+            </div>
+        </div>
+    </div>
 }

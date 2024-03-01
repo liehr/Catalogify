@@ -28,6 +28,50 @@ public class Data
             OwnerId = entity.OwnerId,
             SubInventories = entity.SubInventories,
             Items = entity.Items,
+            Metadata = entity.Metadata,
+            CreatedAt = entity.CreatedAt,
+            LastModifiedAt = entity.LastModifiedAt,
+            Categories = entity.Categories
         };
+    }
+    
+    public static Catalogify.Data.Entities.Inventory ToEntity(Inventory model)
+    {
+        return new Catalogify.Data.Entities.Inventory
+        {
+            Id = model.Id,
+            Name = model.Name,
+            Description = model.Description,
+            ItemCount = model.ItemCount,
+            OwnerId = model.OwnerId,
+            SubInventories = model.SubInventories,
+            Items = model.Items,
+            Metadata = model.Metadata,
+            CreatedAt = model.CreatedAt,
+            LastModifiedAt = model.LastModifiedAt,
+            Categories = model.Categories
+        };
+    }
+    
+    internal static async Task SaveInventoryAsync(Inventory model, DBFactory dbContextFactory)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+        
+        var entity = ToEntity(model);
+        
+        if (entity.Id == Guid.Empty)
+        {
+            entity.Id = Guid.NewGuid();
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.LastModifiedAt = DateTime.UtcNow;
+            dbContext.Inventories.Add(entity);
+        }
+        else
+        {
+            entity.LastModifiedAt = DateTime.UtcNow;
+            dbContext.Inventories.Update(entity);
+        }
+        
+        await dbContext.SaveChangesAsync();
     }
 }
