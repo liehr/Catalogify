@@ -16,9 +16,9 @@ public class Inventory
     
     public List<Catalogify.Data.Entities.Inventory>? SubInventories { get; set; }
     
-    public List<Item>? Items { get; set; }
+    public List<Catalogify.Data.Entities.Item>? Items { get; set; }
     
-    public Dictionary<string, string> Metadata { get; set; } = new();
+    public Dictionary<string, string>? Metadata { get; set; } = new();
     
     public DateTime CreatedAt { get; set; }
     

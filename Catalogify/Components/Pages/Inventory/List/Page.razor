@@ -24,10 +24,10 @@ else
         {
             @foreach (var inventory in _inventories)
             {
-                var bgColor = inventory.Metadata.FirstOrDefault(x => x.Key == "bgColor").Value;
-                var textColor = inventory.Metadata.FirstOrDefault(x => x.Key == "textColor").Value;
-                var outlineColor = inventory.Metadata.FirstOrDefault(x => x.Key == "outlineColor").Value;
-                var borderColor = inventory.Metadata.FirstOrDefault(x => x.Key == "borderColor").Value;
+                var bgColor = inventory.Metadata!.FirstOrDefault(x => x.Key == "bgColor").Value;
+                var textColor = inventory.Metadata!.FirstOrDefault(x => x.Key == "textColor").Value;
+                var outlineColor = inventory.Metadata!.FirstOrDefault(x => x.Key == "outlineColor").Value;
+                var borderColor = inventory.Metadata!.FirstOrDefault(x => x.Key == "borderColor").Value;
                 
                 <div class="col-md-6 mb-3">
                     <div class="h-100 p-5 border @borderColor @bgColor @textColor rounded-3">

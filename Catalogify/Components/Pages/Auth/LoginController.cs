@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using BlazorBootstrap;
 using Catalogify.Data.Transfer;
 using Catalogify.Services.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -11,7 +10,7 @@ using IAuthenticationService = Catalogify.Services.Interface.IAuthenticationServ
 
 namespace Catalogify.Components.Pages.Auth;
 
-public class LoginController(IAuthenticationService authenticationService, ToastService toastService) : Controller
+public class LoginController(IAuthenticationService authenticationService) : Controller
 {
     [HttpPost("/authentication/login")]
     public async Task<IActionResult> LoginAsync([FromForm] string email, [FromForm] string password, [FromForm] bool rememberMe) 

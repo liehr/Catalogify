@@ -14,9 +14,9 @@
 }
 else
 {
-    var bgColor = Inventory.Metadata.FirstOrDefault(x => x.Key == "bgColor").Value;
-    var textColor = Inventory.Metadata.FirstOrDefault(x => x.Key == "textColor").Value;
-    var borderColor = Inventory.Metadata.FirstOrDefault(x => x.Key == "borderColor").Value;
+    var bgColor = Inventory.Metadata!.FirstOrDefault(x => x.Key == "bgColor").Value;
+    var textColor = Inventory.Metadata!.FirstOrDefault(x => x.Key == "textColor").Value;
+    var borderColor = Inventory.Metadata!.FirstOrDefault(x => x.Key == "borderColor").Value;
     
     <div class="p-5 mb-4 @bgColor @textColor border @borderColor rounded-3">
         <div class="container-fluid py-5">
@@ -36,7 +36,7 @@ else
                     <div class="h-100 p-5 border border-dark bg-dark-subtle text-dark-emphasis rounded-3">
                         <h2>@item.Name</h2>
                         <p>@item.Description</p>
-                        <NavLink class="nav-link" href="@($"Inventory/Item/View/{item.Id}")">
+                        <NavLink class="nav-link" href="@($"Item/View/{item.Id}")">
                             <button class="btn btn-outline-dark" type="button">Open Item</button>
                         </NavLink>
                     </div>

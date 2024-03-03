@@ -27,11 +27,9 @@ public partial class Page
         new Tuple<string, string>("bg-secondary", "text-white"),
         new Tuple<string, string>("bg-secondary-subtle", "text-secondary-emphasis"),
         new Tuple<string, string>("bg-success", "text-white"),
-        new Tuple<string, string>("bg-success-subtle", "text-success-emphasis"),
         new Tuple<string, string>("bg-danger", "text-white"),
-        new Tuple<string, string>("bg-danger-subtle", "text-danger-emphasis"),
-        new Tuple<string, string>("bg-warning-subtle", "text-warning-emphasis"),
-        new Tuple<string, string>("bg-info-subtle", "text-info-emphasis"),
+        new Tuple<string, string>("bg-warning", "text-dark"),
+        new Tuple<string, string>("bg-info", "text-white"),
         new Tuple<string, string>("bg-light", "text-dark"),
         new Tuple<string, string>("bg-light-subtle", "text-dark-emphasis"),
         new Tuple<string, string>("bg-dark", "text-white"),
@@ -45,11 +43,9 @@ public partial class Page
         { "bg-secondary", "btn-outline-light" },
         { "bg-secondary-subtle", "btn-outline-dark" },
         { "bg-success", "btn-outline-light" },
-        { "bg-success-subtle", "btn-outline-dark" },
         { "bg-danger", "btn-outline-light" },
-        { "bg-danger-subtle", "btn-outline-dark" },
-        { "bg-warning-subtle", "btn-outline-dark" },
-        { "bg-info-subtle", "btn-outline-dark" },
+        { "bg-warning", "btn-outline-dark"},
+        { "bg-info", "btn-outline-dark" },
         { "bg-light", "btn-outline-dark" },
         { "bg-light-subtle", "btn-outline-dark" },
         { "bg-dark", "btn-outline-light" },
@@ -63,11 +59,9 @@ public partial class Page
         { "bg-secondary", "border-secondary" },
         { "bg-secondary-subtle", "border-secondary" },
         { "bg-success", "border-success" },
-        { "bg-success-subtle", "border-success" },
         { "bg-danger", "border-danger" },
-        { "bg-danger-subtle", "border-danger" },
-        { "bg-warning-subtle", "border-warning" },
-        { "bg-info-subtle", "border-info" },
+        { "bg-warning", "border-warning"},
+        { "bg-info", "border-info" },
         { "bg-light", "border-secondary" },
         { "bg-light-subtle", "border-secondary" },
         { "bg-dark", "border-dark" },
@@ -76,46 +70,31 @@ public partial class Page
     protected override async Task OnInitializedAsync()
     {
         await GetInventories();
+        
+        if (DbFactory is null || AuthenticationStateProvider is null)
+        {
+            ToastService?.Notify(new ToastMessage
+            {
+                Title = "Error",
+                Type = ToastType.Danger,
+                Message = "Your inventories could not be loaded. Something on our end went wrong.",
+                HelpText = "Try again later!",
+                IconName = IconName.ExclamationTriangleFill,
+                AutoHide = true
+            });
+        }
     }
     
     private async Task GetInventories()
     {
-        if (AuthenticationStateProvider is null || DbFactory is null)
-        {
-            ToastService?.Notify(new ToastMessage
-            {
-                Title = "Fehler",
-                Type = ToastType.Danger,
-                Message = "Die Inventare konnten nicht geladen werden.",
-                HelpText = "Kontaktieren Sie den Administrator.",
-                IconName = IconName.ExclamationTriangleFill,
-                AutoHide = true
-            });
-            return;
-        }
-        
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
         var idClaim = authState.User.Claims.FirstOrDefault(e => e.Type == "Id");
         _userName = authState.User.Identity?.Name;
-        _inventories = await Data.GetInventoriesAsync(Guid.Parse(idClaim!.Value), DbFactory);
+        _inventories = await Data.GetInventoriesAsync(Guid.Parse(idClaim!.Value), DbFactory!);
     }
 
     private async Task OnCreateEmptyInventory()
     {
-        if (DbFactory is null)
-        {
-            ToastService?.Notify(new ToastMessage
-            {
-                Title = "Fehler",
-                Type = ToastType.Danger,
-                Message = "Das Inventar konnte nicht erstellt werden.",
-                HelpText = "Kontaktieren Sie den Administrator.",
-                IconName = IconName.ExclamationTriangleFill,
-                AutoHide = true
-            });
-            return;
-        }
-        
         var authState = await AuthenticationStateProvider!.GetAuthenticationStateAsync();
         var idClaim = authState.User.Claims.FirstOrDefault(e => e.Type == "Id");
         
@@ -139,7 +118,7 @@ public partial class Page
         inventory.Metadata.Add("outlineColor", outlineColor);
         inventory.Metadata.Add("borderColor", borderColor);
         
-        await using var dbContext = await DbFactory.CreateDbContextAsync();
+        await using var dbContext = await DbFactory!.CreateDbContextAsync();
         dbContext.Inventories.Add(inventory);
         await dbContext.SaveChangesAsync();
         

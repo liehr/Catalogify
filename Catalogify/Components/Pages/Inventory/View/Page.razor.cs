@@ -26,7 +26,7 @@ public partial class Page
     private NavigationManager? NavigationManager { get; set; }
     private Inventory? Inventory { get; set; }
     
-    private List<Item>? FilteredItems { get; set; }
+    private List<Catalogify.Data.Entities.Item>? FilteredItems { get; set; }
 
     private string SearchTerm
     {
@@ -50,8 +50,8 @@ public partial class Page
             {
                 Title = "Error",
                 Type = ToastType.Danger,
-                Message = "The inventory could not be loaded.",
-                HelpText = "Please contact the administrator.",
+                Message = "Your inventories could not be loaded. Something on our end went wrong.",
+                HelpText = "Try again later!",
                 IconName = IconName.ExclamationTriangleFill,
                 AutoHide = true
             });
@@ -71,8 +71,8 @@ public partial class Page
             {
                 Title = "Error",
                 Type = ToastType.Danger,
-                Message = "The inventory could not be loaded.",
-                HelpText = "You are not authorized to view this inventory.",
+                Message = "You do not have access to this inventory. It may have been deleted or you may not have permission to view it. An Email has been sent to the owner.",
+                HelpText = "Not Authorized!",
                 IconName = IconName.ExclamationTriangleFill,
                 AutoHide = true
             });
@@ -86,22 +86,7 @@ public partial class Page
 
     private async Task OnCreateItem()
     {
-        if (DbFactory is null || NavigationManager is null)
-        {
-            ToastService?.Notify(new ToastMessage
-            {
-                Title = "Error",
-                Type = ToastType.Danger,
-                Message = "The item could not be created.",
-                HelpText = "Please contact the administrator.",
-                IconName = IconName.ExclamationTriangleFill,
-                AutoHide = true
-            });
-            
-            return;
-        }
-        
-        var item = new Item
+        var item = new Catalogify.Data.Entities.Item
         {
             Name = "New Item",
             Description = "New Item Description",
@@ -113,12 +98,12 @@ public partial class Page
         
         if (Inventory!.Items is null)
         {
-            Inventory.Items = new List<Item>();
+            Inventory.Items = new List<Catalogify.Data.Entities.Item>();
         }
         
         Inventory.Items.Add(item);
         
-        await Data.SaveInventoryAsync(Inventory, DbFactory);
+        await Data.SaveInventoryAsync(Inventory, DbFactory!);
         
         StateHasChanged();
     }
