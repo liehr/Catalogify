@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalogify.Services;
 
-public class AuthenticationService(IDbContextFactory<ApplicationDbContext> _factory, IHttpClientFactory _httpClientFactory) : IAuthenticationService
+public class AuthenticationService(IDbContextFactory<ApplicationDbContext> factory) : IAuthenticationService
 {
     public async Task<User?> LoginAsync(LoginUser loginUser)
     {
-        await using var db = await _factory.CreateDbContextAsync();
+        await using var db = await factory.CreateDbContextAsync();
 
         var user = await db.Users.SingleOrDefaultAsync(e => e.Email == loginUser.Email);
 
@@ -34,7 +34,7 @@ public class AuthenticationService(IDbContextFactory<ApplicationDbContext> _fact
             password: createUser.Password, salt: salt, prf: KeyDerivationPrf.HMACSHA256, iterationCount: 100000,
             numBytesRequested: 256 / 8));
 
-        await using var db = await _factory.CreateDbContextAsync();
+        await using var db = await factory.CreateDbContextAsync();
 
         await db.Users.AddAsync(new User
         {
@@ -53,7 +53,7 @@ public class AuthenticationService(IDbContextFactory<ApplicationDbContext> _fact
 
     public async Task<User?> GetUserAsync(Guid id)
     {
-        await using var db = await _factory.CreateDbContextAsync();
+        await using var db = await factory.CreateDbContextAsync();
 
         var user = await db.Users.FindAsync(id);
 
@@ -62,7 +62,7 @@ public class AuthenticationService(IDbContextFactory<ApplicationDbContext> _fact
     
     public async Task<User?> GetUserByEmailAsync(string email)
     {
-        await using var db = await _factory.CreateDbContextAsync();
+        await using var db = await factory.CreateDbContextAsync();
 
         var user = await db.Users.SingleOrDefaultAsync(e => e.Email == email);
 

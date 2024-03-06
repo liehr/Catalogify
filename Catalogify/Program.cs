@@ -3,7 +3,6 @@ using Catalogify.Components;
 using Catalogify.Data;
 using Catalogify.Services;
 using Catalogify.Services.Interface;
-using BlazorBootstrap;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +18,8 @@ builder.Services.AddAuthentication()
         options.SlidingExpiration = true;
     });
 
+
+
 // ### PERSISTENCE SECTION ###
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -31,6 +32,9 @@ builder.Services.AddControllers();
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+
+// ### END OF GENERAL SECTION ###
 
 var app = builder.Build();
 

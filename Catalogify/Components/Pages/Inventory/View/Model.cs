@@ -1,4 +1,6 @@
-﻿namespace Catalogify.Data.Entities;
+﻿using Catalogify.Data.Entities;
+
+namespace Catalogify.Components.Pages.Inventory.View;
 
 public class Inventory
 {
@@ -11,13 +13,12 @@ public class Inventory
     public int ItemCount { get; set; }
     
     public Guid OwnerId { get; set; }
-
-    public User? User { get; set; }
-    public List<Inventory>? SubInventories { get; set; }
     
-    public List<Item>? Items { get; set; }
+    public List<Catalogify.Data.Entities.Inventory>? SubInventories { get; set; }
     
-    public Dictionary<string, string>? Metadata { get; set; }
+    public List<Catalogify.Data.Entities.Item>? Items { get; set; }
+    
+    public Dictionary<string, string>? Metadata { get; set; } = new();
     
     public DateTime CreatedAt { get; set; }
     

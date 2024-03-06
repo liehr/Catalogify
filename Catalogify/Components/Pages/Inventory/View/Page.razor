@@ -1,0 +1,99 @@
+﻿@page "/Inventory/View/{id:guid}"
+@rendermode @(new InteractiveServerRenderMode(false))
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@if (Inventory is null)
+{
+    <PlaceholderContainer Animation="PlaceholderAnimation.Glow">
+        <Placeholder Width="PlaceholderWidth.Col12" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Large" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.Small" />
+        <Placeholder Width="PlaceholderWidth.Col12" Size="PlaceholderSize.ExtraSmall" />
+    </PlaceholderContainer>
+}
+else
+{
+    var bgColor = Inventory.Metadata!.FirstOrDefault(x => x.Key == "bgColor").Value;
+    var textColor = Inventory.Metadata!.FirstOrDefault(x => x.Key == "textColor").Value;
+    var borderColor = Inventory.Metadata!.FirstOrDefault(x => x.Key == "borderColor").Value;
+    
+    <div class="p-5 mb-4 @bgColor @textColor border @borderColor rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">@Inventory.Name</h1>
+            <p class="col-md-8 fs-4">
+                📦 @Inventory.Description
+            </p>
+            
+            <input type="text" class="form-control" id="search" @bind="SearchTerm" @bind:event="oninput" placeholder="Search for items...">
+        </div>
+    </div>
+
+    <div class="row align-items-md-stretch">
+        
+        <div class="col-md-6 mb-3">
+            <div class="h-100 p-5 border border-dark bg-dark-subtle text-dark-emphasis rounded-3">
+                <h2>Your Inventory Statistics</h2>
+                <p>
+                    📊 Here are some statistics about your inventory.
+                </p>
+                
+                <p>
+                    🔢 Number of Items: @Inventory.ItemCount
+                </p>
+                @if (Inventory.Items != null && Inventory.Items.Any())
+                {
+                    <p>
+                        💰 Most Expensive Item: @Inventory.Items.OrderByDescending(e => e.Price).First().Name
+                    </p>
+                    <p>
+                        💸 Least Expensive Item: @Inventory.Items.OrderBy(e => e.Price).First().Name
+                    </p>
+                    <p>
+                        💲 Value of Inventory: @Inventory.Items.Sum(e => e.Price)
+                    </p>
+                }
+            </div>
+        </div>
+        
+        <div class="col-12 col-md-3 mb-3">
+            <div class="h-100 p-3 text-bg-dark rounded-3">
+                <h2>Create a New Item</h2>
+                <p>
+                    ➕ Click below to create a new item.
+                </p>
+                <button class="btn btn-outline-light" type="button" @onclick="OnCreateItem" >Create Item</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Table of Items with Pagination -->
+    
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in FilteredItems!)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>
+                            <NavLink class="nav-link" href="@($"Item/View/{item.Id}")">
+                                <button class="btn btn-outline-dark" type="button">Open Item</button>
+                            </NavLink>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
