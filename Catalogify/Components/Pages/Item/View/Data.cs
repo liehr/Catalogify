@@ -6,12 +6,13 @@ namespace Catalogify.Components.Pages.Item.View;
 
 public class Data
 {
-    internal static async Task<Item?> GetItemAsync(Guid id, Guid inventoryId, DBFactory dbContextFactory)
+    internal static async Task<Item?> GetItemAsync(Guid id, Guid userId, DBFactory dbContextFactory)
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
         
         var item = await dbContext.Items
-            .Where(e => e.Id == id && e.InventoryId == inventoryId)
+            .Where(e => e.Id == id && e.Inventory.OwnerId == userId)
+            .Include(e => e.Categories)
             .FirstOrDefaultAsync();
         
         return item is null ? null : FromEntity(item);
@@ -28,7 +29,7 @@ public class Data
             Quantity = entity.Quantity,
             InventoryId = entity.InventoryId,
             Inventory = entity.Inventory,
-            Categories = entity.Categories
+            Categories = entity.Categories,
         };
     }
     
@@ -43,7 +44,7 @@ public class Data
             Quantity = model.Quantity,
             InventoryId = model.InventoryId,
             Inventory = model.Inventory,
-            Categories = model.Categories
+            Categories = model.Categories,
         };
     }
     
